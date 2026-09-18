@@ -26,8 +26,8 @@ jobs:
 
         - name: Executar Collection
           run: |
-            newman run ServerRest.postman_collection.json \
-            -e base_serveRest.postman_environment.json \
+            newman run collections/ServerRest.postman_collection.json \
+            -e environments/base_serveRest.postman_environment.json \
             -r cli,htmlextra \
             --reporter-htmlextra-export report.html
 
