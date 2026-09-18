@@ -1,0 +1,38 @@
+name: Testes API Newman
+
+on:
+    push:
+        branches:
+            - main
+            - master
+
+jobs:
+    api-tests:
+      runs-on: ubuntu-latest
+
+      steps:  
+        - name: Checkout do código
+          uses: actions/checkout@v4
+
+        - name: Instalar Node.js
+          uses: actions/setup-node@v4
+          with:
+            node-version: 22
+
+        - name: Instalar Newman
+          run: |
+            npm install -g newman
+            npm install -g newman-reporter-htmlextra
+
+        - name: Executar Collection
+          run: |
+            newman run ServerRest.postman_collection.json \
+            -e base_serveRest.postman_environment.json \
+            -r cli,htmlextra \
+            --reporter-htmlextra-export report.html
+
+        - name: Publicar Relatório
+          uses: actions/upload-artifact@v4
+          with:
+            name: relatorio-newman
+            path: report.html
