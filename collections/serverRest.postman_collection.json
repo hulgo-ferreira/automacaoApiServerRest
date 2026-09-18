@@ -1,0 +1,752 @@
+{
+	"info": {
+		"_postman_id": "270cf73e-8286-4e38-a05f-e8c5947958cf",
+		"name": "ServerRest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "CT-01_login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json(); \r",
+									"const tokenAuthorization = response.authorization;\r",
+									"\r",
+									"// ========================================\r",
+									"// CT 01 - Login com sucesso\r",
+									"// ========================================\r",
+									"\r",
+									"//Status Code\r",
+									"pm.test(\"Status Code deve ser 200\", () => { \r",
+									"    pm.response.to.have.status(200); \r",
+									"});\r",
+									"\r",
+									"//Tempo de resposta\r",
+									"pm.test(\"Tempo de resposta inferior a 5 segundos\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+									"});\r",
+									"\r",
+									"//Content-type\r",
+									"pm.test(\"Resposta deve ser JSON\", () => {\r",
+									"    pm.expect(\r",
+									"        pm.response.headers.get(\"Content-Type\")\r",
+									"    ).to.include(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"//JSON válido\r",
+									"pm.test(\"Resposta é um JSON válido\", () => {\r",
+									"    pm.expect(response).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Campo message deve existir\", () => {\r",
+									"    pm.expect(response.message).to.exist;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Campo authorization deve existir\", () => {\r",
+									"    pm.expect(response.authorization).to.exist;\r",
+									"    pm.expect(response.authorization).to.not.be.empty;\r",
+									"});\r",
+									"\r",
+									"//Mensagem de retorno\r",
+									"pm.test(\"Mensagem de sucesso deve estar correta\", function () {\r",
+									"    pm.expect(response.message).to.eql(\"Login realizado com sucesso\");\r",
+									"});\r",
+									"\r",
+									"//==================================== \r",
+									"// Log para evidência \r",
+									"//==================================== \r",
+									"\r",
+									"console.log(\"======================================\"); \r",
+									"console.log(\"EVIDÊNCIA CT 01 - LOGIN\"); \r",
+									"console.log(\"======================================\"); \r",
+									"console.log(\"Mensagem:\"); \r",
+									"console.log(response.message); \r",
+									"console.log(\"\"); \r",
+									"console.log(\"Token de autorização:\"); \r",
+									"console.log(tokenAuthorization); \r",
+									"console.log(\"======================================\"); "
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"fulano@qa.com\",\r\n  \"password\": \"teste\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_serveRest}}login",
+							"host": [
+								"{{base_serveRest}}login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Usuarios",
+			"item": [
+				{
+					"name": "CT-03_listarUsuarios",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json(); \r",
+									"\r",
+									"// ========================================\r",
+									"// CT-03 - Listar usuários\r",
+									"// ========================================\r",
+									"\r",
+									"//Status Code\r",
+									"pm.test(\"Status Code deve ser 200\", () => { \r",
+									"    pm.response.to.have.status(200); \r",
+									"});\r",
+									"\r",
+									"//Tempo de resposta\r",
+									"pm.test(\"Tempo de resposta inferior a 5 segundos\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+									"});\r",
+									"\r",
+									"//Content-type\r",
+									"pm.test(\"Resposta deve ser JSON\", () => {\r",
+									"    pm.expect(\r",
+									"        pm.response.headers.get(\"Content-Type\")\r",
+									"    ).to.include(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"//JSON válido\r",
+									"pm.test(\"Resposta é um JSON válido\", () => {\r",
+									"    pm.expect(response).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Campo quantidade deve existir\", () => {\r",
+									"    pm.expect(response).to.have.property(\"quantidade\")\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Campo usuarios deve existir\", () => {\r",
+									"    pm.expect(response).to.have.property(\"usuarios\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Campo usuarios deve ser um array\", () => {\r",
+									"    pm.expect(response.usuarios).to.be.an(\"array\");\r",
+									"});\r",
+									"\r",
+									"//Validar quantidade consistente\r",
+									"pm.test(\"Quantidade corresponde ao tamanho da lista\", () => {\r",
+									"    pm.expect(response.quantidade).to.eql(response.usuarios.length);\r",
+									"});\r",
+									"\r",
+									"//Validar a estrutura de retorno do primeiro usuário\r",
+									"pm.test(\"Todos os usuários possuem estrutura válida\", () => {\r",
+									"    response.usuarios.forEach(usuario => {\r",
+									"        pm.expect(usuario).to.have.property(\"nome\");\r",
+									"        pm.expect(usuario).to.have.property(\"email\");\r",
+									"        pm.expect(usuario).to.have.property(\"password\");\r",
+									"        pm.expect(usuario).to.have.property(\"administrador\");\r",
+									"        pm.expect(usuario).to.have.property(\"_id\");\r",
+									"    })\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Todos os campos dos usuários devem ser string\", () => {\r",
+									"    response.usuarios.forEach(usuario => {\r",
+									"        pm.expect(usuario.nome).to.be.a(\"string\");\r",
+									"        pm.expect(usuario.email).to.be.a(\"string\");\r",
+									"        pm.expect(usuario.password).to.be.a(\"string\");\r",
+									"        pm.expect(usuario.administrador).to.be.a(\"string\");\r",
+									"        pm.expect(usuario._id).to.be.a(\"string\");\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"// ====================================\r",
+									"// Log para evidência\r",
+									"// ====================================\r",
+									"console.log(\"======================================\");\r",
+									"console.log(\"EVIDÊNCIA CT-03 - LISTAR USUÁRIOS\");\r",
+									"console.log(\"======================================\");\r",
+									"console.log(`Quantidade de usuários: ${response.quantidade}`);\r",
+									"console.log(`Quantidade retornada no array: ${response.usuarios.length}`);\r",
+									"console.log(\"Primeiro usuário retornado:\");\r",
+									"console.log(response.usuarios[0]);\r",
+									"console.log(\"\");\r",
+									"console.log(\"Estrutura JSON completa:\");\r",
+									"console.log(JSON.stringify(response, null, 2));\r",
+									"console.log(\"======================================\");\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_serveRest}}usuarios",
+							"host": [
+								"{{base_serveRest}}usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CT-06_listarUsuariosID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json(); \r",
+									"\r",
+									"// ========================================\r",
+									"// CT-06 - Listar usuário por ID\r",
+									"// ========================================\r",
+									"\r",
+									"//Status Code\r",
+									"pm.test(\"Status Code deve ser 200\", () => { \r",
+									"    pm.response.to.have.status(200); \r",
+									"});\r",
+									"\r",
+									"//Tempo de resposta\r",
+									"pm.test(\"Tempo de resposta inferior a 5 segundos\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+									"});\r",
+									"\r",
+									"//Content-type\r",
+									"pm.test(\"Resposta deve ser JSON\", () => {\r",
+									"    pm.expect(\r",
+									"        pm.response.headers.get(\"Content-Type\")\r",
+									"    ).to.include(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"//JSON válido\r",
+									"pm.test(\"Resposta é um JSON válido\", () => {\r",
+									"    pm.expect(response).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Campo nome deve existir\", () => {\r",
+									"    pm.expect(response).to.have.property(\"nome\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Campo email deve existir\", () => {\r",
+									"    pm.expect(response).to.have.property(\"email\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Campo password deve existir\", () => {\r",
+									"    pm.expect(response).to.have.property(\"password\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Campo administrador deve existir\", () => {\r",
+									"    pm.expect(response).to.have.property(\"administrador\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Campo _id deve existir\", () => {\r",
+									"    pm.expect(response).to.have.property(\"_id\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Todos os campos devem ser string\", () => {\r",
+									"    pm.expect(response.nome).to.be.a(\"string\");\r",
+									"    pm.expect(response.email).to.be.a(\"string\");\r",
+									"    pm.expect(response.password).to.be.a(\"string\");\r",
+									"    pm.expect(response.administrador).to.be.a(\"string\");\r",
+									"    pm.expect(response._id).to.be.a(\"string\");\r",
+									"});\r",
+									"\r",
+									"// ====================================\r",
+									"// Log para evidência\r",
+									"// ====================================\r",
+									"console.log(\"======================================\");\r",
+									"console.log(\"EVIDÊNCIA CT-06 - LISTAR USUÁRIO POR ID\");\r",
+									"console.log(\"======================================\");\r",
+									"console.log(`Nome: ${response.nome}`);\r",
+									"console.log(`Email: ${response.email}`);\r",
+									"console.log(`Administrador: ${response.administrador}`);\r",
+									"console.log(`ID: ${response._id}`);\r",
+									"console.log(\"\");\r",
+									"console.log(\"Estrutura JSON completa:\");\r",
+									"console.log(JSON.stringify(response, null, 2));\r",
+									"console.log(\"======================================\");\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_serveRest}}usuarios/xBqMcQCg43iVSEuJ",
+							"host": [
+								"{{base_serveRest}}usuarios"
+							],
+							"path": [
+								"xBqMcQCg43iVSEuJ"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CT-07_usuarioNãoEncontrado",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json(); \r",
+									"\r",
+									"// ========================================\r",
+									"// CT-07 - Usuário não encontrado\r",
+									"// ========================================\r",
+									"\r",
+									"//Status Code\r",
+									"pm.test(\"Status Code deve ser 400\", () => { \r",
+									"    pm.response.to.have.status(400); \r",
+									"});\r",
+									"\r",
+									"//Tempo de resposta\r",
+									"pm.test(\"Tempo de resposta inferior a 5 segundos\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+									"});\r",
+									"\r",
+									"//Content-type\r",
+									"pm.test(\"Resposta deve ser JSON\", () => {\r",
+									"    pm.expect(\r",
+									"        pm.response.headers.get(\"Content-Type\")\r",
+									"    ).to.include(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"//JSON válido\r",
+									"pm.test(\"Resposta é um JSON válido\", () => {\r",
+									"    pm.expect(response).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Campo message deve existir\", () => {\r",
+									"    pm.expect(response).to.have.property(\"message\");\r",
+									"});\r",
+									"\r",
+									"//Mensagem de retorno\r",
+									"pm.test(\"Mensagem de sucesso deve estar correta\", function () {\r",
+									"    pm.expect(response.message).to.eql(\"Usuário não encontrado\");\r",
+									"});\r",
+									"\r",
+									"// ====================================\r",
+									"// Log para evidência\r",
+									"// ====================================\r",
+									"console.log(\"======================================\");\r",
+									"console.log(\"EVIDÊNCIA CT-07 - USUÁRIO NÃO ENCONTRADO\");\r",
+									"console.log(\"======================================\");\r",
+									"console.log(`Mensagem: ${response.message}`);\r",
+									"console.log(\"\");\r",
+									"console.log(\"JSON completo:\");\r",
+									"console.log(JSON.stringify(response, null, 2));\r",
+									"console.log(\"======================================\");\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_serveRest}}usuarios/rR34oGoaM55wzFv8",
+							"host": [
+								"{{base_serveRest}}usuarios"
+							],
+							"path": [
+								"rR34oGoaM55wzFv8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CT-04_cadastrarUsuarios",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json(); \r",
+									"\r",
+									"//Salva o ID do usuário criado\r",
+									"pm.environment.set(\"userId\", response._id);\r",
+									"\r",
+									"// ========================================\r",
+									"// CT-04 - Cadastrar novo usuário\r",
+									"// ========================================\r",
+									"\r",
+									"//Status Code\r",
+									"pm.test(\"Status Code deve ser 201\", () => { \r",
+									"    pm.response.to.have.status(201); \r",
+									"});\r",
+									"\r",
+									"//Tempo de resposta\r",
+									"pm.test(\"Tempo de resposta inferior a 5 segundos\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+									"});\r",
+									"\r",
+									"//Content-type\r",
+									"pm.test(\"Resposta deve ser JSON\", () => {\r",
+									"    pm.expect(\r",
+									"        pm.response.headers.get(\"Content-Type\")\r",
+									"    ).to.include(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"//JSON válido\r",
+									"pm.test(\"Resposta é um JSON válido\", () => {\r",
+									"    pm.expect(response).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Campo message deve existir\", () => {\r",
+									"    pm.expect(response).to.have.property(\"message\")\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Campo _id deve existir\", () => {\r",
+									"    pm.expect(response).to.have.property(\"_id\")\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Todos os campos devem ser string\", () => {\r",
+									"        pm.expect(response.message).to.be.a(\"string\");\r",
+									"        pm.expect(response._id).to.be.a(\"string\");\r",
+									"});\r",
+									"\r",
+									"//Mensagem de retorno\r",
+									"pm.test(\"Mensagem de sucesso deve estar correta\", function () {\r",
+									"    pm.expect(response.message).to.eql(\"Cadastro realizado com sucesso\");\r",
+									"});\r",
+									"\r",
+									"// ====================================\r",
+									"// Log para evidência\r",
+									"// ====================================\r",
+									"console.log(\"======================================\");\r",
+									"console.log(\"EVIDÊNCIA CT-04 - CADASTRAR USUÁRIO\");\r",
+									"console.log(\"======================================\");\r",
+									"console.log(`Mensagem: ${response.message}`);\r",
+									"console.log(`ID criado: ${response._id}`);\r",
+									"console.log(\"\");\r",
+									"console.log(\"JSON completo:\");\r",
+									"console.log(JSON.stringify(response, null, 2));\r",
+									"console.log(\"======================================\");\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"Fulano teste004\",\r\n  \"email\": \"fulanoteste004@qa.com.br\",\r\n  \"password\": \"teste\",\r\n  \"administrador\": \"true\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_serveRest}}usuarios",
+							"host": [
+								"{{base_serveRest}}usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CT-05_usuarioJaCadastrado",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json(); \r",
+									"\r",
+									"// ========================================\r",
+									"// CT-05 - Usuário já cadastrado\r",
+									"// ========================================\r",
+									"\r",
+									"//Status Code\r",
+									"pm.test(\"Status Code deve ser 400\", () => { \r",
+									"    pm.response.to.have.status(400); \r",
+									"});\r",
+									"\r",
+									"//Tempo de resposta\r",
+									"pm.test(\"Tempo de resposta inferior a 5 segundos\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+									"});\r",
+									"\r",
+									"//Content-type\r",
+									"pm.test(\"Resposta deve ser JSON\", () => {\r",
+									"    pm.expect(\r",
+									"        pm.response.headers.get(\"Content-Type\")\r",
+									"    ).to.include(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"//JSON válido\r",
+									"pm.test(\"Resposta é um JSON válido\", () => {\r",
+									"    pm.expect(response).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Campo message deve existir\", () => {\r",
+									"    pm.expect(response).to.have.property(\"message\")\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Campo message deve ser string\", () => {\r",
+									"    pm.expect(response.message).to.be.a(\"string\");\r",
+									"});\r",
+									"\r",
+									"//Mensagem de retorno\r",
+									"pm.test(\"Mensagem de sucesso deve estar correta\", function () {\r",
+									"    pm.expect(response.message).to.eql(\"Este email já está sendo usado\");\r",
+									"});\r",
+									"\r",
+									"// ====================================\r",
+									"// Log para evidência\r",
+									"// ====================================\r",
+									"console.log(\"======================================\");\r",
+									"console.log(\"EVIDÊNCIA CT-05 - USUÁRIO JÁ CADASTRADO\");\r",
+									"console.log(\"======================================\");\r",
+									"console.log(`Mensagem: ${response.message}`);\r",
+									"console.log(\"\");\r",
+									"console.log(\"JSON completo:\");\r",
+									"console.log(JSON.stringify(response, null, 2));\r",
+									"console.log(\"======================================\");\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"Fulano teste 04\",\r\n  \"email\": \"fulanoteste04@qa.com.br\",\r\n  \"password\": \"teste\",\r\n  \"administrador\": \"true\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_serveRest}}usuarios",
+							"host": [
+								"{{base_serveRest}}usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CT-08_deletarUsuario",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json(); \r",
+									"\r",
+									"// ========================================\r",
+									"// CT-08 - Deletar Usuário já cadastrado\r",
+									"// ========================================\r",
+									"\r",
+									"//Status Code\r",
+									"pm.test(\"Status Code deve ser 200\", () => { \r",
+									"    pm.response.to.have.status(200); \r",
+									"});\r",
+									"\r",
+									"//Tempo de resposta\r",
+									"pm.test(\"Tempo de resposta inferior a 5 segundos\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+									"});\r",
+									"\r",
+									"//Content-type\r",
+									"pm.test(\"Resposta deve ser JSON\", () => {\r",
+									"    pm.expect(\r",
+									"        pm.response.headers.get(\"Content-Type\")\r",
+									"    ).to.include(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"//JSON válido\r",
+									"pm.test(\"Resposta é um JSON válido\", () => {\r",
+									"    pm.expect(response).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Campo message deve existir\", () => {\r",
+									"    pm.expect(response).to.have.property(\"message\")\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Campo message deve ser string\", () => {\r",
+									"    pm.expect(response.message).to.be.a(\"string\");\r",
+									"});\r",
+									"\r",
+									"//Mensagem de retorno\r",
+									"pm.test(\"Mensagem de sucesso deve estar correta\", function () {\r",
+									"    pm.expect(response.message).to.eql(\"Registro excluído com sucesso\");\r",
+									"});\r",
+									"\r",
+									"// ====================================\r",
+									"// Log para evidência\r",
+									"// ====================================\r",
+									"console.log(\"======================================\");\r",
+									"console.log(\"EVIDÊNCIA CT-08 - DELETAR USUÁRIO JÁ CADASTRADO\");\r",
+									"console.log(\"======================================\");\r",
+									"console.log(`Mensagem: ${response.message}`);\r",
+									"console.log(\"\");\r",
+									"console.log(\"JSON completo:\");\r",
+									"console.log(JSON.stringify(response, null, 2));\r",
+									"console.log(\"======================================\");\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_serveRest}}/usuarios/{{userId}}",
+							"host": [
+								"{{base_serveRest}}"
+							],
+							"path": [
+								"usuarios",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CT-09_editarUsuario",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json(); \r",
+									"\r",
+									"// ========================================\r",
+									"// CT-09 - Editar Usuário já cadastrado\r",
+									"// ========================================\r",
+									"\r",
+									"//Status Code\r",
+									"pm.test(\"Status Code deve ser 400\", () => { \r",
+									"    pm.response.to.have.status(400); \r",
+									"});\r",
+									"\r",
+									"//Tempo de resposta\r",
+									"pm.test(\"Tempo de resposta inferior a 5 segundos\", () => {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(5000);\r",
+									"});\r",
+									"\r",
+									"//Content-type\r",
+									"pm.test(\"Resposta deve ser JSON\", () => {\r",
+									"    pm.expect(\r",
+									"        pm.response.headers.get(\"Content-Type\")\r",
+									"    ).to.include(\"application/json\");\r",
+									"});\r",
+									"\r",
+									"//JSON válido\r",
+									"pm.test(\"Resposta é um JSON válido\", () => {\r",
+									"    pm.expect(response).to.be.an(\"object\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Campo message deve existir\", () => {\r",
+									"    pm.expect(response).to.have.property(\"message\")\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Campo message deve ser string\", () => {\r",
+									"    pm.expect(response.message).to.be.a(\"string\");\r",
+									"});\r",
+									"\r",
+									"//Mensagem de retorno\r",
+									"pm.test(\"Mensagem de sucesso deve estar correta\", function () {\r",
+									"    pm.expect(response.message).to.eql(\"Este email já está sendo usado\");\r",
+									"});\r",
+									"\r",
+									"// ====================================\r",
+									"// Log para evidência\r",
+									"// ====================================\r",
+									"console.log(\"======================================\");\r",
+									"console.log(\"EVIDÊNCIA CT-09 - EDITAR USUÁRIO JÁ CADASTRADO\");\r",
+									"console.log(\"======================================\");\r",
+									"console.log(`Mensagem: ${response.message}`);\r",
+									"console.log(\"\");\r",
+									"console.log(\"JSON completo:\");\r",
+									"console.log(JSON.stringify(response, null, 2));\r",
+									"console.log(\"======================================\");\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"Fulano teste005\",\r\n  \"email\": \"fulanoteste005@qa.com.br\",\r\n  \"password\": \"teste\",\r\n  \"administrador\": \"true\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_serveRest}}/usuarios/{{userId}}",
+							"host": [
+								"{{base_serveRest}}"
+							],
+							"path": [
+								"usuarios",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
