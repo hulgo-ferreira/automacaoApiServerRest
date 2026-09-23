@@ -76,7 +76,7 @@ newman run collections/serverRest.postman_collection.json \
 ```bash
 newman run collections/serverRest.postman_collection.json \
   -e environments/base_serverRest.postman_environment.json \
-  --folder "BFF API - Protocolo"
+  --folder "nome_da_pasta"
 ```
 
 ---
