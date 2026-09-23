@@ -1,26 +1,26 @@
-# Automação API - ServerRest
- 
-Projeto de automação de testes de API utilizando:
- 
-- Postman
-- Newman
+# 🧪 Automação de API - ServerRest
+
+Projeto de automação de testes de API utilizando **Postman**, **Newman**, **JavaScript** e **GitHub Actions**.
+
+---
+
+## 📋 Sobre o projeto
+
+Este projeto utiliza o **Postman** para definir collections de testes de API e o **Newman** para executar esses testes via linha de comando e em pipelines de CI/CD.
+
+---
+
+## 🛠️ Tecnologias utilizadas
+
+- [Postman](https://www.postman.com/)
+- [Newman](https://github.com/postmanlabs/newman)
 - JavaScript
 - GitHub Actions
- 
-## Como executar
- 
-```bash
-newman run collections/ServerRest.postman_collection.json \
--e environments/base_serveRest.postman_environment.json
-
-
-# 🧪 Integração Postman + Newman
-
-Este projeto utiliza o **Postman** para definir collections de testes de API e o **Newman** para executar esses testes em linha de comando e em pipelines de CI/CD.
 
 ---
 
 ## 📦 Pré-requisitos
+
 - Node.js instalado (versão 18.x recomendada)
 - NPM instalado
 - Collections e environments exportados do Postman
@@ -28,38 +28,87 @@ Este projeto utiliza o **Postman** para definir collections de testes de API e o
 ---
 
 ## 📂 Estrutura de arquivos
-- `serverRest.postman_collection.json` → Collection de testes
-- `base_serverRest.postman_environment.json` → Environment com variáveis de execução
+
+```
+├── collections/
+│   └── serverRest.postman_collection.json     # Collection de testes
+├── environments/
+│   └── base_serverRest.postman_environment.json # Environment com variáveis de execução
+└── reports/
+    └── report.html                             # Relatório gerado (HTML)
+```
 
 ---
 
-## 🚀 Instalação do Newman
+## 🚀 Instalação
+
+Instale o Newman globalmente:
+
 ```bash
 npm install -g newman
+```
 
+Para gerar relatórios em HTML, instale também o reporter `htmlextra`:
 
-## ▶️ Executando testes localmente
-newman run serverRest.postman_collection.json \
-  -e base_serverRest.postman_environment.json
+```bash
+npm install -g newman-reporter-htmlextra
+```
 
+---
+
+## ▶️ Executando os testes
+
+### Execução padrão
+
+```bash
+newman run collections/serverRest.postman_collection.json \
+  -e environments/base_serverRest.postman_environment.json
+```
+
+### Execução de uma pasta (folder) específica
+
+```bash
+newman run collections/serverRest.postman_collection.json \
+  -e environments/base_serverRest.postman_environment.json \
+  --folder "BFF API - Protocolo"
+```
+
+---
 
 ## 🔒 Problemas de certificado
-Caso ocorra erro de certificado, utilize a flag --insecure:
 
-newman run serverRest.postman_collection.json \
-  -e base_serverRest.postman_environment.json \
+Caso ocorra erro relacionado a certificado SSL durante a execução, utilize a flag `--insecure`:
+
+```bash
+newman run collections/serverRest.postman_collection.json \
+  -e environments/base_serverRest.postman_environment.json \
   --folder "BFF API - Protocolo" \
   --insecure
+```
 
+---
 
 ## 📊 Gerando relatório HTML
-npm install -g newman-reporter-htmlextra
 
+Com o reporter `htmlextra` instalado, execute:
 
-## Execute com reporter configurado
+```bash
 newman run collections/serverRest.postman_collection.json \
-  -e base_serverRest.postman_environment.json \
+  -e environments/base_serverRest.postman_environment.json \
   -r htmlextra \
   --reporter-htmlextra-export ./reports/report.html
+```
 
+O relatório será gerado em `./reports/report.html`.
 
+---
+
+## 🔄 Integração contínua (CI/CD)
+
+Este projeto está preparado para execução via **GitHub Actions**, permitindo rodar a suíte de testes automaticamente a cada push ou pull request.
+
+---
+
+## 📄 Licença
+
+Este projeto está sob a licença MIT. Consulte o arquivo `LICENSE` para mais detalhes.
