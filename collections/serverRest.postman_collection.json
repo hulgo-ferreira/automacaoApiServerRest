@@ -294,12 +294,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{base_serveRest}}usuarios/xBqMcQCg43iVSEuJ",
+							"raw": "{{base_serveRest}}usuarios/PNjLAoSt8WVgWR5E",
 							"host": [
 								"{{base_serveRest}}usuarios"
 							],
 							"path": [
-								"xBqMcQCg43iVSEuJ"
+								"PNjLAoSt8WVgWR5E"
 							]
 						}
 					},
@@ -461,7 +461,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"nome\": \"Fulano teste004\",\r\n  \"email\": \"fulanoteste004@qa.com.br\",\r\n  \"password\": \"teste\",\r\n  \"administrador\": \"true\"\r\n}",
+							"raw": "{\r\n  \"nome\": \"Fulano teste115\",\r\n  \"email\": \"fulanoteste115@qa.com.br\",\r\n  \"password\": \"teste\",\r\n  \"administrador\": \"true\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -726,7 +726,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"nome\": \"Fulano teste005\",\r\n  \"email\": \"fulanoteste005@qa.com.br\",\r\n  \"password\": \"teste\",\r\n  \"administrador\": \"true\"\r\n}",
+							"raw": "{\r\n  \"nome\": \"Fulano teste115\",\r\n  \"email\": \"fulanoteste115@qa.com.br\",\r\n  \"password\": \"teste\",\r\n  \"administrador\": \"false\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
