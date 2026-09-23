@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://serverest.dev/">
-    <img src="./assets/logo.png" alt="ServeRest" width="300">
+    <img src="./assets/logo.jpg" alt="ServeRest" width="300">
   </a>
 </p>
 
