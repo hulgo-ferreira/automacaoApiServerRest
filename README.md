@@ -1,6 +1,12 @@
-# 🧪 Automação de API - ServerRest
+<p align="center">
+  <a href="https://serverest.dev/">
+    <img src="./assets/logo.png" alt="ServeRest" width="300">
+  </a>
+</p>
 
-Projeto de automação de testes de API utilizando **Postman**, **Newman**, **JavaScript** e **GitHub Actions**.
+<h1 align="center">🧪 Automação de API - ServerRest</h1>
+
+Projeto de automação de testes de API utilizando **Postman**, **Newman**, **JavaScript** e **GitHub Actions**, testando a API pública do [ServeRest](https://serverest.dev/).
 
 ---
 
